@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Nutrición Mayela"/>
+<meta name="theme-color" content="#1a1a2e"/>
+<title>Nutrición Mayela — Junio 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #0f0f1a;
+  --surface: #1a1a2e;
+  --surface2: #252540;
+  --card: #1e1e35;
+  --sage: #7ecb8f;
+  --sage-dim: #3a6b45;
+  --terra: #e8855a;
+  --terra-dim: #7a3d22;
+  --gold: #f0c060;
+  --gold-dim: #6b5020;
+  --lavender: #a78bfa;
+  --lav-dim: #4c3a7a;
+  --text: #f0ede8;
+  --text2: #a09880;
+  --text3: #60574e;
+  --line: #2a2a45;
+  --radius: 16px;
+  --tab-h: 70px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  height: 100%; background: var(--bg);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ── LAYOUT ── */
+#app { display: flex; flex-direction: column; height: 100%; }
+
+/* ── HEADER ── */
+.header {
+  background: var(--surface);
+  padding: 52px 20px 16px;
+  display: flex; align-items: flex-end; justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.header-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; line-height: 1; }
+.header-title em { color: var(--terra); font-style: italic; }
+.header-sub { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text2); margin-top: 3px; }
+.header-badge {
+  background: var(--sage-dim); color: var(--sage);
+  font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 5px 10px; border-radius: 20px;
+}
+
+/* ── SCROLLABLE CONTENT ── */
+.content {
+  flex: 1; overflow-y: auto; overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: calc(var(--tab-h) + var(--safe-bottom) + 10px);
+}
+.content::-webkit-scrollbar { display: none; }
+
+/* ── TABS ── */
+.tabs {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: calc(var(--tab-h) + var(--safe-bottom));
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  display: flex; z-index: 100;
+  padding-bottom: var(--safe-bottom);
+}
+.tab {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 4px;
+  font-size: 10px; font-weight: 500; letter-spacing: 0.05em;
+  color: var(--text3); cursor: pointer; transition: color 0.2s;
+  padding: 8px 0 0;
+}
+.tab.active { color: var(--terra); }
+.tab-icon { font-size: 22px; line-height: 1; }
+
+/* ── WEEK SELECTOR ── */
+.week-selector {
+  display: flex; gap: 8px; padding: 16px 16px 0;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+.week-selector::-webkit-scrollbar { display: none; }
+.week-btn {
+  flex-shrink: 0; background: var(--surface2);
+  border: 1.5px solid transparent; border-radius: 10px;
+  padding: 8px 16px; font-size: 12px; font-weight: 500;
+  color: var(--text2); cursor: pointer; transition: all 0.2s;
+}
+.week-btn.active {
+  background: var(--terra-dim); border-color: var(--terra);
+  color: var(--terra);
+}
+
+/* ── DAY STRIP ── */
+.day-strip {
+  display: flex; gap: 8px; padding: 14px 16px 0;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+.day-strip::-webkit-scrollbar { display: none; }
+.day-pill {
+  flex-shrink: 0; display: flex; flex-direction: column;
+  align-items: center; background: var(--surface2);
+  border: 1.5px solid transparent; border-radius: 12px;
+  padding: 8px 12px; cursor: pointer; transition: all 0.2s; min-width: 50px;
+}
+.day-pill.active {
+  background: var(--terra-dim); border-color: var(--terra);
+}
+.day-pill.libre { background: var(--lav-dim); border-color: transparent; }
+.day-pill.libre.active { border-color: var(--lavender); }
+.day-dow { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text2); }
+.day-num { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; line-height: 1.1; color: var(--text); margin-top: 2px; }
+.day-pill.active .day-dow, .day-pill.active .day-num { color: var(--terra); }
+.day-pill.libre .day-dow { color: var(--lavender); opacity: 0.7; }
+.day-pill.libre .day-num { color: var(--lavender); }
+
+/* ── DAY DETAIL ── */
+.day-detail { padding: 14px 16px; }
+
+.day-title-row {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.day-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-style: italic; color: var(--text); }
+.libre-badge {
+  background: var(--lav-dim); color: var(--lavender);
+  font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 4px 10px; border-radius: 20px;
+}
+
+.meal-card {
+  background: var(--card); border-radius: var(--radius);
+  padding: 14px 16px; margin-bottom: 10px;
+  border-left: 3px solid transparent;
+  animation: fadeUp 0.3s ease both;
+}
+.meal-card:nth-child(1) { animation-delay: 0.05s; }
+.meal-card:nth-child(2) { animation-delay: 0.1s; }
+.meal-card:nth-child(3) { animation-delay: 0.15s; }
+.meal-card:nth-child(4) { animation-delay: 0.2s; }
+.meal-card:nth-child(5) { animation-delay: 0.25s; }
+
+.meal-card.desayuno { border-color: var(--gold); }
+.meal-card.mmañana  { border-color: var(--sage); }
+.meal-card.comida   { border-color: var(--terra); }
+.meal-card.merienda { border-color: var(--gold); }
+.meal-card.cena     { border-color: var(--lavender); }
+.meal-card.libre-card { border-color: var(--lavender); background: var(--lav-dim); opacity: 0.85; }
+
+.meal-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.meal-icon { font-size: 18px; }
+.meal-label-txt {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--text2);
+}
+.meal-content { font-size: 14px; line-height: 1.6; color: var(--text); }
+.meal-content.libre-text { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; color: var(--lavender); }
+
+.tip-bar {
+  background: var(--surface2); border-radius: 10px;
+  padding: 10px 14px; margin-top: 4px; margin-bottom: 8px;
+  font-size: 12px; color: var(--text2); display: flex; align-items: center; gap: 8px;
+  animation: fadeUp 0.3s 0.3s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SHOPPING ── */
+.shop-view { padding: 16px; }
+.shop-week-label {
+  font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic;
+  color: var(--text); margin-bottom: 14px; padding: 0 2px;
+}
+.shop-cat-card {
+  background: var(--card); border-radius: var(--radius);
+  margin-bottom: 12px; overflow: hidden;
+}
+.shop-cat-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-bottom: 1px solid var(--line);
+  cursor: pointer;
+}
+.shop-cat-head h3 { font-size: 13px; font-weight: 600; flex: 1; }
+.shop-cat-chevron { font-size: 12px; color: var(--text2); transition: transform 0.2s; }
+.shop-cat-card.open .shop-cat-chevron { transform: rotate(90deg); }
+.shop-items { padding: 8px 16px 12px; display: none; }
+.shop-cat-card.open .shop-items { display: block; }
+.shop-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 0; border-bottom: 1px solid var(--line);
+  cursor: pointer; transition: opacity 0.2s;
+}
+.shop-item:last-child { border-bottom: none; }
+.shop-item.checked { opacity: 0.4; }
+.shop-check {
+  width: 20px; height: 20px; border-radius: 6px;
+  border: 2px solid var(--text3); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; transition: all 0.2s;
+}
+.shop-item.checked .shop-check { background: var(--sage); border-color: var(--sage); }
+.shop-item-text { flex: 1; font-size: 13px; line-height: 1.4; }
+.shop-item-qty { font-size: 12px; font-weight: 600; color: var(--terra); white-space: nowrap; }
+.shop-reset {
+  background: var(--surface2); border: none; border-radius: 10px;
+  padding: 10px 16px; width: 100%; color: var(--text2);
+  font-family: 'DM Sans', sans-serif; font-size: 13px;
+  cursor: pointer; margin-top: 8px;
+}
+
+/* ── TIPS VIEW ── */
+.tips-view { padding: 16px; }
+.tip-section { margin-bottom: 20px; }
+.tip-section h3 {
+  font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic;
+  margin-bottom: 10px; color: var(--terra);
+}
+.tip-card {
+  background: var(--card); border-radius: var(--radius);
+  padding: 14px 16px; margin-bottom: 8px; font-size: 13px;
+  line-height: 1.7; color: var(--text2);
+  border-left: 3px solid var(--sage);
+}
+.tip-card strong { color: var(--text); font-weight: 600; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <div>
+      <div class="header-title">Nutrición <em>Mayela</em></div>
+      <div class="header-sub">Junio 2026</div>
+    </div>
+    <div class="header-badge">Junio 2026</div>
+  </div>
+
+  <div class="content" id="content">
+    <!-- filled by JS -->
+  </div>
+
+  <nav class="tabs">
+    <div class="tab active" id="tab-plan" onclick="showView('plan')">
+      <div class="tab-icon">📅</div>
+      <div>Planificador</div>
+    </div>
+    <div class="tab" id="tab-shop" onclick="showView('shop')">
+      <div class="tab-icon">🛒</div>
+      <div>Compra</div>
+    </div>
+    <div class="tab" id="tab-tips" onclick="showView('tips')">
+      <div class="tab-icon">🌿</div>
+      <div>Consejos</div>
+    </div>
+  </nav>
+</div>
+
+<script>
+// ── DATA ──
+const DAYS = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+const MONTHS = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+const MEALS_TEMPLATE = [
+  {
+    desayuno: 'Pan centeno + revuelto huevo/claras + ½ aguacate + 8 nueces ☕',
+    mmañana: 'Infusión + manzana 🍎',
+    comida: 'Ensalada brotes verdes (espinacas, canónigos, rúcula) con zanahoria, queso feta y aceitunas negras · Hamburguesas de pollo',
+    merienda: 'Kéfir + mango 🥭',
+    cena: 'Revuelto de huevos con espárragos 🥚'
+  },
+  {
+    desayuno: 'Yogur/kéfir batido con fresas, arándanos y plátano ☕🥛',
+    mmañana: 'Infusión + pera 🍐',
+    comida: 'Bolsa de arroz + ½ aguacate + salmón a la plancha + pepino + tomate cherry',
+    merienda: 'Kéfir + papaya 🍈',
+    cena: 'Puré de verduras · Muslo de pollo a la plancha'
+  },
+  {
+    desayuno: 'Pan centeno + revuelto huevo/claras + ½ aguacate + 8 nueces ☕',
+    mmañana: 'Batido de frutas congeladas con leche 🥤',
+    comida: 'Ensalada de legumbres (lentejas, garbanzos, alubias) con pimiento, col, zanahoria, pepino y tofu',
+    merienda: 'Kéfir + melocotón 🍑',
+    cena: 'Pizza casera: masa + tomate rallado + atún + cebolla + queso light'
+  },
+  {
+    desayuno: 'Yogur/kéfir batido con fresas, arándanos y plátano ☕🥛',
+    mmañana: 'Infusión + manzana 🍎',
+    comida: 'Pescado al horno con verduras o boniato 🐟',
+    merienda: 'Kéfir + mango 🥭',
+    cena: 'Longanizas de pollo + pisto (verduras salteadas con tomate)'
+  },
+  {
+    desayuno: 'Pan centeno + revuelto huevo/claras + ½ aguacate + 8 nueces ☕',
+    mmañana: 'Batido de frutas congeladas con leche 🥤',
+    comida: 'Macarrones sin gluten + atún + mayonesa light (ensalada fría de nevera) 🍝',
+    merienda: 'Kéfir + melocotón 🍑',
+    cena: 'Pimientos al horno + pescado 🫑'
+  },
+  {
+    desayuno: 'Yogur/kéfir batido con fresas, arándanos y plátano ☕🥛',
+    mmañana: 'Infusión + pera 🍐',
+    comida: '🎉 COMIDA LIBRE',
+    merienda: 'Kéfir + papaya 🍈',
+    cena: 'Revuelto de huevos con calabacín 🥚'
+  },
+  {
+    desayuno: 'Pan centeno + revuelto huevo/claras + ½ aguacate + 8 nueces ☕',
+    mmañana: 'Infusión + manzana 🍎',
+    comida: 'Ensalada brotes verdes + zanahoria + feta + aceitunas · Hamburguesas de pollo',
+    merienda: 'Kéfir + mango 🥭',
+    cena: '🎉 CENA LIBRE'
+  }
+];
+
+// June 2026 starts on Monday (day index 0)
+const WEEKS = [
+  { label: 'Semana 1', dates: [1,2,3,4,5,6,7] },
+  { label: 'Semana 2', dates: [8,9,10,11,12,13,14] },
+  { label: 'Semana 3', dates: [15,16,17,18,19,20,21] },
+  { label: 'Semana 4', dates: [22,23,24,25,26,27,28] },
+  { label: 'Fin junio', dates: [29,30] }
+];
+
+const SHOPPING = [
+  {
+    week: 'Semana 1 — 1 al 7 jun',
+    categories: [
+      { icon: '🥦', name: 'Verduras y hortalizas', color: '#3a6b45', items: [
+        {qty:'1 bolsa', name:'Espinacas baby'},{qty:'1 bolsa', name:'Canónigos'},
+        {qty:'1 bolsa', name:'Rúcula'},{qty:'4', name:'Zanahorias'},
+        {qty:'2', name:'Pepinos'},{qty:'1', name:'Pimiento rojo'},
+        {qty:'1', name:'Pimiento verde'},{qty:'1', name:'Calabacín'},
+        {qty:'1 manojo', name:'Espárragos'},{qty:'250 g', name:'Tomate cherry'},
+        {qty:'1 kg', name:'Tomates maduros'},{qty:'¼', name:'Col / repollo'},
+        {qty:'1', name:'Cebolla'},{qty:'2', name:'Boniatos'},
+        {qty:'2', name:'Pimientos para horno'}
+      ]},
+      { icon: '🍎', name: 'Frutas', color: '#7a3d22', items: [
+        {qty:'250 g', name:'Fresas'},{qty:'1 bolsa', name:'Arándanos'},
+        {qty:'2', name:'Plátanos'},{qty:'3', name:'Manzanas'},
+        {qty:'2', name:'Peras'},{qty:'1', name:'Mango'},
+        {qty:'½', name:'Papaya'},{qty:'2', name:'Melocotones'},
+        {qty:'2', name:'Aguacates'},{qty:'1 bolsa', name:'Fruta congelada variada'}
+      ]},
+      { icon: '🐟', name: 'Proteínas', color: '#6b5020', items: [
+        {qty:'2 lomos', name:'Salmón fresco'},{qty:'2 filetes', name:'Pescado blanco (merluza/dorada)'},
+        {qty:'4', name:'Hamburguesas de pollo'},{qty:'2', name:'Muslos de pollo'},
+        {qty:'200 g', name:'Longanizas de pollo'},{qty:'1 filete', name:'Ternera'},
+        {qty:'6', name:'Huevos'},{qty:'4', name:'Claras de huevo (bote)'},
+        {qty:'200 g', name:'Tofu firme'},{qty:'3 latas', name:'Atún al natural'}
+      ]},
+      { icon: '🧀', name: 'Lácteos', color: '#2a3a6a', items: [
+        {qty:'500 g', name:'Yogur / kéfir natural'},{qty:'1 L', name:'Leche (la que te siente bien)'},
+        {qty:'100 g', name:'Queso feta'},{qty:'1 bolsa', name:'Queso light rallado'}
+      ]},
+      { icon: '🌾', name: 'Despensa', color: '#4c3a7a', items: [
+        {qty:'1 bote', name:'Lentejas cocidas'},{qty:'1 bote', name:'Garbanzos cocidos'},
+        {qty:'1 bote', name:'Alubias cocidas'},{qty:'2 bolsas', name:'Arroz microondas'},
+        {qty:'250 g', name:'Macarrones sin gluten'},{qty:'1 paq.', name:'Pan de centeno'},
+        {qty:'100 g', name:'Nueces'},{qty:'1 tarro', name:'Aceitunas negras'},
+        {qty:'1 tarro', name:'Mayonesa light'},{qty:'1 bote', name:'Tomate rallado'},
+        {qty:'1 caja', name:'Infusiones preparadas'},{qty:'1 bolsa', name:'Masa pizza sin gluten'},
+        {qty:'–', name:'Café (el que uses)'},{qty:'–', name:'AOVE, sal, especias'}
+      ]},
+      { icon: '🧊', name: 'Extra verano', color: '#3a2a4a', items: [
+        {qty:'1 caja', name:'Polos de hielo'},{qty:'1 bolsa', name:'Frutos rojos congelados'},
+        {qty:'–', name:'Ingredientes pisto extra (calabacín, pimiento, tomate)'}
+      ]}
+    ]
+  },
+  {
+    week: 'Semana 2 — 8 al 14 jun',
+    categories: [
+      { icon: '🥦', name: 'Verduras y hortalizas', color: '#3a6b45', items: [
+        {qty:'1 bolsa', name:'Espinacas baby'},{qty:'1 bolsa', name:'Rúcula'},
+        {qty:'3', name:'Zanahorias'},{qty:'2', name:'Pepinos'},
+        {qty:'1', name:'Calabacín'},{qty:'1 manojo', name:'Espárragos'},
+        {qty:'250 g', name:'Tomate cherry'},{qty:'1 kg', name:'Tomates para gazpacho'},
+        {qty:'1', name:'Pimiento rojo'},{qty:'2', name:'Boniatos'},
+        {qty:'3', name:'Pimientos para horno'},{qty:'1', name:'Cebolla'}
+      ]},
+      { icon: '🍎', name: 'Frutas', color: '#7a3d22', items: [
+        {qty:'250 g', name:'Arándanos'},{qty:'2', name:'Plátanos'},
+        {qty:'3', name:'Manzanas'},{qty:'2', name:'Peras'},
+        {qty:'1', name:'Mango'},{qty:'2', name:'Melocotones'},
+        {qty:'2', name:'Aguacates'},{qty:'250 g', name:'Fresas'}
+      ]},
+      { icon: '🐟', name: 'Proteínas', color: '#6b5020', items: [
+        {qty:'2 lomos', name:'Salmón'},{qty:'2 filetes', name:'Pescado blanco'},
+        {qty:'4', name:'Hamburguesas de pollo'},{qty:'2', name:'Muslos de pollo'},
+        {qty:'200 g', name:'Longanizas de pollo'},{qty:'6', name:'Huevos + claras'},
+        {qty:'200 g', name:'Tofu'},{qty:'3 latas', name:'Atún'}
+      ]},
+      { icon: '🧀', name: 'Lácteos', color: '#2a3a6a', items: [
+        {qty:'500 g', name:'Kéfir'},{qty:'1 L', name:'Leche'},
+        {qty:'100 g', name:'Queso feta'},{qty:'1 bolsa', name:'Queso light rallado'}
+      ]},
+      { icon: '🌾', name: 'Despensa', color: '#4c3a7a', items: [
+        {qty:'1 bote', name:'Lentejas'},{qty:'1 bote', name:'Garbanzos'},
+        {qty:'2 bolsas', name:'Arroz microondas'},{qty:'1 paq.', name:'Pan de centeno'},
+        {qty:'1 caja', name:'Infusiones'},{qty:'1 bote', name:'Tomate rallado'},
+        {qty:'–', name:'Nueces, aceitunas (restock si hace falta)'}
+      ]},
+      { icon: '🧊', name: 'Extra verano', color: '#3a2a4a', items: [
+        {qty:'1 caja', name:'Polos de hielo'},{qty:'1 bolsa', name:'Fruta congelada'}
+      ]}
+    ]
+  },
+  {
+    week: 'Semana 3 — 15 al 21 jun',
+    categories: [
+      { icon: '🥦', name: 'Verduras y hortalizas', color: '#3a6b45', items: [
+        {qty:'1 bolsa', name:'Canónigos + espinacas'},{qty:'4', name:'Zanahorias'},
+        {qty:'2', name:'Pepinos'},{qty:'1+1', name:'Pimiento rojo + verde'},
+        {qty:'1', name:'Calabacín'},{qty:'1 manojo', name:'Espárragos'},
+        {qty:'250 g', name:'Tomate cherry'},{qty:'1 kg', name:'Tomates maduros'},
+        {qty:'¼', name:'Col'},{qty:'2', name:'Boniatos'},{qty:'3', name:'Pimientos para horno'}
+      ]},
+      { icon: '🍎', name: 'Frutas', color: '#7a3d22', items: [
+        {qty:'250 g', name:'Fresas o arándanos'},{qty:'2', name:'Plátanos'},
+        {qty:'3+2', name:'Manzanas + peras'},{qty:'1', name:'Papaya'},
+        {qty:'2', name:'Melocotones'},{qty:'2', name:'Aguacates'},
+        {qty:'1 bolsa', name:'Fruta congelada'}
+      ]},
+      { icon: '🐟', name: 'Proteínas', color: '#6b5020', items: [
+        {qty:'2 lomos', name:'Salmón'},{qty:'2 filetes', name:'Pescado blanco'},
+        {qty:'4', name:'Hamburguesas de pollo'},{qty:'2', name:'Muslos de pollo'},
+        {qty:'1 filete', name:'Ternera'},{qty:'6', name:'Huevos + claras'},
+        {qty:'3 latas', name:'Atún'},{qty:'200 g', name:'Longanizas de pollo'}
+      ]},
+      { icon: '🧀', name: 'Lácteos', color: '#2a3a6a', items: [
+        {qty:'500 g', name:'Yogur / kéfir'},{qty:'1 L', name:'Leche'},
+        {qty:'100 g', name:'Queso feta'},{qty:'1 bolsa', name:'Queso light rallado'}
+      ]},
+      { icon: '🌾', name: 'Despensa', color: '#4c3a7a', items: [
+        {qty:'1 bote', name:'Alubias'},{qty:'2 bolsas', name:'Arroz microondas'},
+        {qty:'250 g', name:'Macarrones sin gluten'},{qty:'1 paq.', name:'Pan de centeno'},
+        {qty:'1 caja', name:'Infusiones'},{qty:'1 bolsa', name:'Masa pizza (si queda)'}
+      ]},
+      { icon: '🧊', name: 'Extra verano', color: '#3a2a4a', items: [
+        {qty:'1 caja', name:'Polos de hielo'},{qty:'–', name:'Extras pisto + gazpacho'}
+      ]}
+    ]
+  },
+  {
+    week: 'Semana 4 — 22 al 30 jun',
+    categories: [
+      { icon: '🥦', name: 'Verduras y hortalizas', color: '#3a6b45', items: [
+        {qty:'1 bolsa', name:'Brotes verdes mix'},{qty:'4', name:'Zanahorias'},
+        {qty:'2', name:'Pepinos'},{qty:'1', name:'Pimiento rojo'},
+        {qty:'2', name:'Calabacines'},{qty:'1 manojo', name:'Espárragos'},
+        {qty:'250 g', name:'Tomate cherry'},{qty:'1 kg', name:'Tomates'},
+        {qty:'2', name:'Boniatos'},{qty:'3', name:'Pimientos para horno'},
+        {qty:'1', name:'Cebolla'}
+      ]},
+      { icon: '🍎', name: 'Frutas', color: '#7a3d22', items: [
+        {qty:'250 g', name:'Arándanos + fresas'},{qty:'2', name:'Plátanos'},
+        {qty:'3+2', name:'Manzanas + peras'},{qty:'1', name:'Mango'},
+        {qty:'2', name:'Melocotones'},{qty:'2', name:'Aguacates'},
+        {qty:'1 bolsa', name:'Fruta congelada'}
+      ]},
+      { icon: '🐟', name: 'Proteínas', color: '#6b5020', items: [
+        {qty:'2 lomos', name:'Salmón'},{qty:'2 filetes', name:'Pescado blanco'},
+        {qty:'4', name:'Hamburguesas de pollo'},{qty:'2', name:'Muslos de pollo'},
+        {qty:'200 g', name:'Longanizas de pollo'},{qty:'1 filete', name:'Ternera'},
+        {qty:'6', name:'Huevos + claras'},{qty:'200 g', name:'Tofu'},
+        {qty:'3 latas', name:'Atún'}
+      ]},
+      { icon: '🧀', name: 'Lácteos', color: '#2a3a6a', items: [
+        {qty:'500 g', name:'Kéfir'},{qty:'1 L', name:'Leche'},
+        {qty:'100 g', name:'Queso feta'},{qty:'1 bolsa', name:'Queso light rallado'}
+      ]},
+      { icon: '🌾', name: 'Despensa', color: '#4c3a7a', items: [
+        {qty:'1 bote', name:'Lentejas'},{qty:'1 bote', name:'Garbanzos'},
+        {qty:'2 bolsas', name:'Arroz microondas'},{qty:'1 paq.', name:'Pan de centeno'},
+        {qty:'1 caja', name:'Infusiones'},{qty:'–', name:'Restock: nueces, aceitunas, AOVE'}
+      ]},
+      { icon: '🧊', name: 'Extra verano', color: '#3a2a4a', items: [
+        {qty:'1 caja', name:'Polos de hielo'},{qty:'–', name:'Extras pisto + gazpacho'}
+      ]}
+    ]
+  }
+];
+
+// ── STATE ──
+let currentView = 'plan';
+let currentWeek = 0;
+let currentDay = 0;
+let checkedItems = JSON.parse(localStorage.getItem('checkedItems') || '{}');
+let openCats = {};
+
+// ── HELPERS ──
+function isLibre(dayIdx) {
+  const m = MEALS_TEMPLATE[dayIdx % 7];
+  return m.comida.includes('LIBRE') || m.cena.includes('LIBRE');
+}
+
+function saveChecked() {
+  try { localStorage.setItem('checkedItems', JSON.stringify(checkedItems)); } catch(e) {}
+}
+
+// ── RENDER ──
+function render() {
+  const c = document.getElementById('content');
+  if (currentView === 'plan') c.innerHTML = renderPlan();
+  else if (currentView === 'shop') c.innerHTML = renderShop();
+  else c.innerHTML = renderTips();
+  attachEvents();
+}
+
+function renderPlan() {
+  const week = WEEKS[currentWeek];
+  let html = '';
+
+  // week selector
+  html += '<div class="week-selector">';
+  WEEKS.forEach((w, wi) => {
+    html += `<div class="week-btn ${wi===currentWeek?'active':''}" onclick="selectWeek(${wi})">${w.label}</div>`;
+  });
+  html += '</div>';
+
+  // day strip
+  html += '<div class="day-strip">';
+  week.dates.forEach((d, di) => {
+    const dayOfWeek = (d - 1) % 7; // June 1 = Monday
+    const libre = isLibre(dayOfWeek);
+    html += `<div class="day-pill ${di===currentDay?'active':''} ${libre?'libre':''}" onclick="selectDay(${di})">
+      <div class="day-dow">${DAYS[dayOfWeek]}</div>
+      <div class="day-num">${d}</div>
+    </div>`;
+  });
+  html += '</div>';
+
+  // day detail
+  const date = week.dates[currentDay];
+  const dayOfWeek = (date - 1) % 7;
+  const m = MEALS_TEMPLATE[dayOfWeek];
+  const libre = isLibre(dayOfWeek);
+
+  html += `<div class="day-detail">
+    <div class="day-title-row">
+      <div class="day-title">${DAYS[dayOfWeek]}, ${date} de junio</div>
+      ${libre ? '<div class="libre-badge">✨ Día libre</div>' : ''}
+    </div>`;
+
+  const meals = [
+    { key:'desayuno', icon:'☀️', label:'Desayuno', cls:'desayuno' },
+    { key:'mmañana', icon:'🍃', label:'Media mañana', cls:'mmañana' },
+    { key:'comida', icon:'🥗', label:'Comida', cls:'comida' },
+    { key:'merienda', icon:'🌤', label:'Merienda', cls:'merienda' },
+    { key:'cena', icon:'🌙', label:'Cena', cls:'cena' }
+  ];
+
+  meals.forEach(meal => {
+    const txt = m[meal.key];
+    const isLibreMeal = txt.includes('LIBRE');
+    html += `<div class="meal-card ${meal.cls} ${isLibreMeal?'libre-card':''}">
+      <div class="meal-header">
+        <span class="meal-icon">${meal.icon}</span>
+        <span class="meal-label-txt">${meal.label}</span>
+      </div>
+      <div class="meal-content ${isLibreMeal?'libre-text':''}">${txt}</div>
+    </div>`;
+  });
+
+  html += `<div class="tip-bar">💧 Si tienes hambre entre horas → infusión preparada. Polos de hielo disponibles 🧊</div>`;
+  html += '</div>';
+
+  return html;
+}
+
+function renderShop() {
+  const shopData = SHOPPING[Math.min(currentWeek, SHOPPING.length-1)];
+  let html = `<div class="shop-view">
+    <div class="shop-week-label">${shopData.week}</div>`;
+
+  html += '<div class="week-selector" style="padding:0 0 14px;">';
+  SHOPPING.forEach((s, si) => {
+    const wLabel = WEEKS[si]?.label || '';
+    html += `<div class="week-btn ${si===currentWeek?'active':''}" onclick="selectWeek(${si})">${wLabel}</div>`;
+  });
+  html += '</div>';
+
+  shopData.categories.forEach((cat, ci) => {
+    const catKey = `${currentWeek}-${ci}`;
+    const isOpen = openCats[catKey] !== false; // default open
+    html += `<div class="shop-cat-card ${isOpen?'open':''}" id="cat-${ci}">
+      <div class="shop-cat-head" onclick="toggleCat(${ci})" style="background:${cat.color}22">
+        <span style="font-size:18px">${cat.icon}</span>
+        <h3>${cat.name}</h3>
+        <span class="shop-cat-chevron">›</span>
+      </div>
+      <div class="shop-items">`;
+
+    cat.items.forEach((item, ii) => {
+      const itemKey = `${currentWeek}-${ci}-${ii}`;
+      const checked = !!checkedItems[itemKey];
+      html += `<div class="shop-item ${checked?'checked':''}" onclick="toggleItem(${ci},${ii})">
+        <div class="shop-check">${checked?'✓':''}</div>
+        <div class="shop-item-text">${item.name}</div>
+        <div class="shop-item-qty">${item.qty}</div>
+      </div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  html += `<button class="shop-reset" onclick="resetWeek()">🔄 Desmarcar todos esta semana</button>`;
+  html += '</div>';
+  return html;
+}
+
+function renderTips() {
+  return `<div class="tips-view">
+    <div class="tip-section">
+      <h3>Desayunos</h3>
+      <div class="tip-card"><strong>Salado:</strong> Pan de centeno + revuelto de huevo con claras + ½ aguacate + 8 nueces. Proteína + grasa buena = energía estable toda la mañana.</div>
+      <div class="tip-card"><strong>Dulce:</strong> Yogur batido o kéfir con fresas, arándanos y plátano. Probióticos + antioxidantes desde el primer momento.</div>
+    </div>
+    <div class="tip-section">
+      <h3>Meriendas antiinflamatorias</h3>
+      <div class="tip-card"><strong>🥭 Mango</strong> — rico en vitamina C y betacaroteno. Apoya el sistema inmune.</div>
+      <div class="tip-card"><strong>🍈 Papaya</strong> — enzimas digestivas (papaína), ideal para después de comidas más contundentes.</div>
+      <div class="tip-card"><strong>🍑 Melocotón</strong> — hidratante y fuente de vitamina A. Perfecto en verano. Ve rotando las tres.</div>
+    </div>
+    <div class="tip-section">
+      <h3>Proteínas del plan</h3>
+      <div class="tip-card"><strong>Pescado al horno, salmón, merluza, dorada</strong> — los "mismos que hasta ahora". Omega-3 antiinflamatorio, fácil de preparar en batch.</div>
+      <div class="tip-card"><strong>Hamburguesas y longanizas de pollo</strong> — proteína completa, baja en grasa. Ideal para cenas ligeras.</div>
+      <div class="tip-card"><strong>Tofu</strong> — proteína vegetal completa en la ensalada de legumbres. Acompáñalo con limón y AOVE.</div>
+    </div>
+    <div class="tip-section">
+      <h3>Comidas libres 🎉</h3>
+      <div class="tip-card">Cada semana tienes <strong>1 comida libre (sábado)</strong> y <strong>1 cena libre (domingo)</strong>. Son parte del plan, no excepciones. Disfrútalas sin culpa.</div>
+    </div>
+    <div class="tip-section">
+      <h3>Verano</h3>
+      <div class="tip-card">🧊 <strong>Polos de hielo</strong> — incluidos en el plan. Perfectos para el calor de junio en Valencia.</div>
+      <div class="tip-card">🥤 <strong>Batido de frutas congeladas</strong> con la leche que te siente bien. Media mañana refrescante y nutritiva.</div>
+      <div class="tip-card">🍅 <strong>Gazpacho y salmorejo</strong> en cena — preparar cantidad y tener en nevera toda la semana.</div>
+    </div>
+    <div class="tip-section">
+      <h3>Entre horas</h3>
+      <div class="tip-card">Si entra hambre → <strong>infusión preparada</strong>. Cero calorías, ayuda a la digestión y corta el picoteo.</div>
+    </div>
+  </div>`;
+}
+
+// ── EVENTS ──
+function attachEvents() {}
+
+function selectWeek(wi) {
+  currentWeek = wi;
+  currentDay = 0;
+  render();
+  document.getElementById('content').scrollTop = 0;
+}
+
+function selectDay(di) {
+  currentDay = di;
+  render();
+}
+
+function toggleCat(ci) {
+  const catKey = `${currentWeek}-${ci}`;
+  openCats[catKey] = !(openCats[catKey] !== false);
+  render();
+}
+
+function toggleItem(ci, ii) {
+  const itemKey = `${currentWeek}-${ci}-${ii}`;
+  checkedItems[itemKey] = !checkedItems[itemKey];
+  saveChecked();
+  render();
+}
+
+function resetWeek() {
+  Object.keys(checkedItems).forEach(k => {
+    if (k.startsWith(`${currentWeek}-`)) delete checkedItems[k];
+  });
+  saveChecked();
+  render();
+}
+
+function showView(view) {
+  currentView = view;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`tab-${view}`).classList.add('active');
+  render();
+  document.getElementById('content').scrollTop = 0;
+}
+
+// ── INIT ──
+// Set current day based on today's date if in June 2026
+(function initCurrentDay() {
+  const today = new Date();
+  if (today.getFullYear() === 2026 && today.getMonth() === 5) {
+    const d = today.getDate();
+    for (let wi = 0; wi < WEEKS.length; wi++) {
+      const idx = WEEKS[wi].dates.indexOf(d);
+      if (idx !== -1) { currentWeek = wi; currentDay = idx; break; }
+    }
+  }
+})();
+
+render();
+</script>
+</body>
+</html>
