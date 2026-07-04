@@ -240,6 +240,55 @@ html, body {
   border-left: 3px solid var(--sage);
 }
 .tip-card strong { color: var(--text); font-weight: 600; }
+
+/* ── MENÚ (opciones base) ── */
+.menu-view { padding: 16px; }
+.menu-intro {
+  font-family: 'Cormorant Garamond', serif; font-size: 15px; font-style: italic;
+  color: var(--text2); margin-bottom: 16px; line-height: 1.5; padding: 0 2px;
+}
+.menu-block { margin-bottom: 14px; }
+.menu-block-head { display: flex; align-items: center; gap: 8px; margin: 0 2px 8px; }
+.menu-block-icon { font-size: 20px; }
+.menu-block-title {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--text2);
+}
+.menu-card {
+  background: var(--card); border-radius: var(--radius);
+  padding: 6px 16px; border-left: 3px solid var(--line);
+}
+.menu-card.desayuno { border-color: var(--gold); }
+.menu-card.mmañana  { border-color: var(--sage); }
+.menu-card.comida   { border-color: var(--terra); }
+.menu-card.merienda { border-color: var(--gold); }
+.menu-card.cena     { border-color: var(--lavender); }
+.menu-opt {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 11px 0; border-bottom: 1px solid var(--line);
+}
+.menu-opt:last-child { border-bottom: none; }
+.menu-opt-tag {
+  flex-shrink: 0; font-size: 9px; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text2);
+  background: var(--surface2); border-radius: 6px;
+  padding: 4px 7px; min-width: 34px; text-align: center; line-height: 1.3;
+}
+.menu-opt.dulce  .menu-opt-tag { color: var(--gold); background: var(--gold-dim); }
+.menu-opt.salado .menu-opt-tag { color: var(--sage); background: var(--sage-dim); }
+.menu-opt-text { flex: 1; font-size: 14px; line-height: 1.55; color: var(--text); }
+.menu-opt-text b { font-weight: 600; color: var(--text); }
+.menu-single {
+  font-size: 14px; line-height: 1.55; color: var(--text); padding: 11px 0;
+}
+.menu-note {
+  background: var(--surface2); border-radius: 10px;
+  padding: 11px 14px; margin-bottom: 8px;
+  font-size: 13px; line-height: 1.55; color: var(--text2);
+  display: flex; gap: 9px; align-items: flex-start;
+}
+.menu-note b { color: var(--text); font-weight: 600; }
+.menu-note-icon { font-size: 16px; flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -257,7 +306,11 @@ html, body {
   </div>
 
   <nav class="tabs">
-    <div class="tab active" id="tab-plan" onclick="showView('plan')">
+    <div class="tab active" id="tab-menu" onclick="showView('menu')">
+      <div class="tab-icon">🍽️</div>
+      <div>Menú</div>
+    </div>
+    <div class="tab" id="tab-plan" onclick="showView('plan')">
       <div class="tab-icon">📅</div>
       <div>Planificador</div>
     </div>
@@ -328,6 +381,43 @@ const MEALS_TEMPLATE = [
     cena: '🎉 CENA LIBRE'
   }
 ];
+
+// ── MENÚ BASE (opciones del plan · v1) ──
+const MENU = {
+  intro: 'Plan de nutrición de Mayela — elige una opción en cada comida. Postre en cada comida principal: una manzana o una pera 🍎🍐',
+  blocks: [
+    { key:'desayuno', icon:'☀️', title:'Desayuno', cls:'desayuno', options: [
+      { tag:'Salado', kind:'salado', text:'Tortitas de maíz o pan de centeno, pechuga de pavo y ½ aguacate <b>+ café</b>' },
+      { tag:'Salado', kind:'salado', text:'Tostada de pan de centeno con queso Philadelphia light y pepino <b>+ café</b>' },
+      { tag:'Dulce', kind:'dulce', text:'Yogur batido con frutos rojos congelados (arándanos, fresas, frambuesas) <b>+ café</b>' },
+      { tag:'Dulce', kind:'dulce', text:'Tostada de centeno con mermelada de tomate o frambuesa <b>+ café</b>' }
+    ]},
+    { key:'mmañana', icon:'🍃', title:'Media mañana', cls:'mmañana', single:'Un plátano 🍌 + infusión de cola de caballo' },
+    { key:'comida', icon:'🥗', title:'Comida', cls:'comida', options: [
+      { tag:'Op. 1', text:'<b>Pescado</b> (3 rodajas de merluza · 1 lenguado · 1 emperador o mero · 2 bacalaos) con acompañamiento: patatas de bote, boniato, guisantes y zanahoria, col blanca, espinacas, pimientos o cebolla' },
+      { tag:'Op. 2', text:'<b>Ensalada de lentejas</b> con pimientos, tomate, cebolla, tomate cherry, queso feta y atún o sardinas' },
+      { tag:'Op. 3', text:'<b>Ensalada de brotes</b> (canónigos, espinacas frescas, lechuga morada) con manzana, tomate cherry, queso fresco light, 8 nueces y 2 hamburguesas de pollo. Sazona con especias o mostaza y ½ cucharada de miel' },
+      { tag:'Op. 4', text:'<b>Ensalada de brotes</b> con tomate, pepino, queso feta, anchoas o atún y cebolla' }
+    ]},
+    { key:'merienda', icon:'🌤', title:'Media tarde (merienda)', cls:'merienda', options: [
+      { tag:'Dulce', kind:'dulce', text:'Yogur griego con arándanos y ½ cucharada de miel <b>+ infusión de té verde</b>' },
+      { tag:'Salado', kind:'salado', text:'Tortitas de maíz y pechuga de pavo <b>+ infusión de té verde</b>' }
+    ]},
+    { key:'cena', icon:'🌙', title:'Cena', cls:'cena', options: [
+      { tag:'Op. 1', text:'Tortilla de 3 huevos con atún, acompañada de un tomate entero' },
+      { tag:'Op. 2', text:'Ternera a la plancha con verdura, la cantidad que quieras' },
+      { tag:'Op. 3', text:'2 muslos de pollo deshuesados con patata o boniato' },
+      { tag:'Op. 4', text:'Chuletas de pavo con patatas o boniato' },
+      { tag:'Op. 5', text:'Crema de verduras y, de segundo, solomillo a la plancha' }
+    ]}
+  ],
+  notes: [
+    { icon:'🍝', text:'<b>1 o 2 días por semana</b>, para la comida: pasta sin gluten o de lentejas con carne picada de pollo y tomate natural.' },
+    { icon:'🍎', text:'<b>Postre en cada comida:</b> una manzana o una pera.' },
+    { icon:'🐚', text:'<b>Si te notas floja o débil:</b> añade a la comida una lata de mejillones.' },
+    { icon:'🍫', text:'<b>Antojo de dulce:</b> tostada de pan de centeno con mantequilla de cacahuete o mermelada al gusto.' }
+  ]
+};
 
 // June 2026 starts on Monday (day index 0)
 const WEEKS = [
@@ -500,7 +590,7 @@ const SHOPPING = [
 ];
 
 // ── STATE ──
-let currentView = 'plan';
+let currentView = 'menu';
 let currentWeek = 0;
 let currentDay = 0;
 let checkedItems = JSON.parse(localStorage.getItem('checkedItems') || '{}');
@@ -519,7 +609,8 @@ function saveChecked() {
 // ── RENDER ──
 function render() {
   const c = document.getElementById('content');
-  if (currentView === 'plan') c.innerHTML = renderPlan();
+  if (currentView === 'menu') c.innerHTML = renderMenu();
+  else if (currentView === 'plan') c.innerHTML = renderPlan();
   else if (currentView === 'shop') c.innerHTML = renderShop();
   else c.innerHTML = renderTips();
   attachEvents();
@@ -624,6 +715,48 @@ function renderShop() {
 
   html += `<button class="shop-reset" onclick="resetWeek()">🔄 Desmarcar todos esta semana</button>`;
   html += '</div>';
+  return html;
+}
+
+function renderMenu() {
+  let html = `<div class="menu-view">
+    <div class="menu-intro">${MENU.intro}</div>`;
+
+  MENU.blocks.forEach(block => {
+    html += `<div class="menu-block">
+      <div class="menu-block-head">
+        <span class="menu-block-icon">${block.icon}</span>
+        <span class="menu-block-title">${block.title}</span>
+      </div>
+      <div class="menu-card ${block.cls}">`;
+
+    if (block.single) {
+      html += `<div class="menu-single">${block.single}</div>`;
+    } else {
+      block.options.forEach(opt => {
+        html += `<div class="menu-opt ${opt.kind || ''}">
+          <span class="menu-opt-tag">${opt.tag}</span>
+          <span class="menu-opt-text">${opt.text}</span>
+        </div>`;
+      });
+    }
+
+    html += `</div></div>`;
+  });
+
+  html += `<div class="menu-block">
+    <div class="menu-block-head">
+      <span class="menu-block-icon">📌</span>
+      <span class="menu-block-title">Notas del plan</span>
+    </div>`;
+  MENU.notes.forEach(note => {
+    html += `<div class="menu-note">
+      <span class="menu-note-icon">${note.icon}</span>
+      <span>${note.text}</span>
+    </div>`;
+  });
+  html += `</div></div>`;
+
   return html;
 }
 
