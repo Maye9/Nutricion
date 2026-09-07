@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Nutrición Mayela"/>
 <meta name="theme-color" content="#1a1a2e"/>
-<title>Nutrición Mayela — Julio 2026</title>
+<title>Nutrición Mayela — Septiembre 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root {
@@ -296,9 +296,9 @@ html, body {
   <div class="header">
     <div>
       <div class="header-title">Nutrición <em>Mayela</em></div>
-      <div class="header-sub">Julio 2026</div>
+      <div class="header-sub">Septiembre 2026</div>
     </div>
-    <div class="header-badge">Julio 2026</div>
+    <div class="header-badge">Septiembre 2026</div>
   </div>
 
   <div class="content" id="content">
@@ -330,150 +330,150 @@ html, body {
 const DAYS = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
 const MONTHS = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 
-// Rotación semanal (Lun→Dom) construida con las opciones del plan real.
-// Postre en cada comida: manzana o pera. Media mañana fija: plátano + cola de caballo.
+// Rotación semanal (Lun→Dom). Comidas y cenas fijas según el plan de la nutricionista;
+// desayuno, media mañana y merienda rotan entre las opciones libres del menú.
 const MEALS_TEMPLATE = [
   { // Lunes
-    desayuno: 'Salado · Tortitas de maíz o pan de centeno con pechuga de pavo y ½ aguacate ☕',
-    mmañana: 'Plátano 🍌 + infusión de cola de caballo',
-    comida: 'Pescado (merluza, lenguado, emperador/mero o bacalao) con boniato, guisantes y zanahoria · Postre: manzana o pera 🍎',
-    merienda: 'Yogur griego con arándanos y ½ cucharada de miel + té verde',
-    cena: 'Tortilla de 3 huevos con atún y un tomate entero 🍅'
+    desayuno: '2 huevos + 1 tostada integral + tomate ☕',
+    mmañana: 'Fruta + 10-15 almendras',
+    comida: 'Lentejas de bote salteadas con verduras + huevo cocido + naranja 🍊',
+    merienda: 'Yogur natural + fruta',
+    cena: 'Merluza al horno/airfryer + ensalada + patata 🐟'
   },
   { // Martes
-    desayuno: 'Dulce · Yogur batido con frutos rojos congelados (arándanos, fresas, frambuesas) ☕',
-    mmañana: 'Plátano 🍌 + infusión de cola de caballo',
-    comida: 'Ensalada de lentejas con pimientos, tomate, cebolla, tomate cherry, queso feta y atún o sardinas · Postre: manzana o pera 🍐',
-    merienda: 'Tortitas de maíz y pechuga de pavo + té verde',
-    cena: 'Ternera a la plancha con verdura al gusto 🥩'
+    desayuno: 'Yogur natural + 30-40 g de avena + fruta + 10-15 g de nueces ☕',
+    mmañana: 'Yogur natural',
+    comida: 'Pollo a la plancha + arroz integral de vasito + verduras congeladas 🍗',
+    merienda: 'Fruta + frutos secos',
+    cena: 'Tortilla de 2 huevos con espinacas + tomate + pan integral 🍳'
   },
   { // Miércoles
-    desayuno: 'Salado · Tostada de centeno con queso Philadelphia light y pepino ☕',
-    mmañana: 'Plátano 🍌 + infusión de cola de caballo',
-    comida: 'Ensalada de brotes (canónigos, espinacas, lechuga morada) con manzana, tomate cherry, queso fresco light, 8 nueces y 2 hamburguesas de pollo · Postre: manzana o pera 🍎',
-    merienda: 'Yogur griego con arándanos y ½ cucharada de miel + té verde',
-    cena: '2 muslos de pollo deshuesados con patata o boniato 🍗'
+    desayuno: 'Tostada integral con aguacate y pavo + 1 pieza de fruta ☕',
+    mmañana: '1 pieza de fruta',
+    comida: 'Garbanzos de bote + atún + pimiento + tomate + cebolla 🥗',
+    merienda: 'Tostada pequeña con queso fresco o pavo',
+    cena: 'Salmón + verduras al microondas 🐠'
   },
   { // Jueves
-    desayuno: 'Dulce · Tostada de centeno con mermelada de tomate o frambuesa ☕',
-    mmañana: 'Plátano 🍌 + infusión de cola de caballo',
-    comida: 'Pasta sin gluten o de lentejas con carne picada de pollo y tomate natural · Postre: manzana o pera 🍐 🍝',
-    merienda: 'Tortitas de maíz y pechuga de pavo + té verde',
-    cena: 'Chuletas de pavo con patatas o boniato'
+    desayuno: '2 huevos + 1 tostada integral + tomate ☕',
+    mmañana: 'Fruta + 10-15 almendras',
+    comida: 'Pasta integral + tomate triturado + carne picada magra + verduras 🍝',
+    merienda: 'Yogur natural + fruta',
+    cena: 'Ensalada completa con huevo, atún, maíz y tomate 🥬'
   },
   { // Viernes
-    desayuno: 'Salado · Tortitas de maíz o pan de centeno con pechuga de pavo y ½ aguacate ☕',
-    mmañana: 'Plátano 🍌 + infusión de cola de caballo',
-    comida: 'Ensalada de brotes con tomate, pepino, queso feta, anchoas o atún y cebolla · Postre: manzana o pera 🍎',
-    merienda: 'Yogur griego con arándanos y ½ cucharada de miel + té verde',
-    cena: 'Crema de verduras y, de segundo, solomillo a la plancha'
+    desayuno: 'Yogur natural + 30-40 g de avena + fruta + 10-15 g de nueces ☕',
+    mmañana: 'Yogur natural',
+    comida: 'Arroz + pollo + verduras salteadas 🍚',
+    merienda: 'Fruta + frutos secos',
+    cena: 'Crema de verduras + tortilla francesa + tostada 🥣'
   },
   { // Sábado
-    desayuno: 'Dulce · Yogur batido con frutos rojos congelados (arándanos, fresas, frambuesas) ☕',
-    mmañana: 'Plátano 🍌 + infusión de cola de caballo',
-    comida: 'Pescado con patatas de bote, col blanca y pimientos · Postre: manzana o pera 🍐',
-    merienda: 'Tortitas de maíz y pechuga de pavo + té verde',
-    cena: 'Ternera a la plancha con verdura al gusto 🥩'
+    desayuno: 'Tostada integral con aguacate y pavo + 1 pieza de fruta ☕',
+    mmañana: '1 pieza de fruta',
+    comida: 'Patata cocida o asada + pescado + ensalada 🥔',
+    merienda: 'Tostada pequeña con queso fresco o pavo',
+    cena: 'Poke rápido: arroz + salmón o atún + aguacate + verduras 🥢'
   },
   { // Domingo
-    desayuno: 'Salado · Tostada de centeno con queso Philadelphia light y pepino ☕',
-    mmañana: 'Plátano 🍌 + infusión de cola de caballo',
-    comida: 'Ensalada de lentejas con pimientos, tomate, cebolla, tomate cherry, queso feta y atún o sardinas · Postre: manzana o pera 🍎',
-    merienda: 'Yogur griego con arándanos y ½ cucharada de miel + té verde',
-    cena: '2 muslos de pollo deshuesados con patata o boniato 🍗'
+    desayuno: '2 huevos + 1 tostada integral + tomate ☕',
+    mmañana: 'Fruta + 10-15 almendras',
+    comida: 'Comida familiar normal: legumbre, arroz, paella, carne o pescado… controlando cantidades 🍲',
+    merienda: 'Yogur natural + fruta',
+    cena: 'Cena ligera: verduras + huevos o pescado 🌿'
   }
 ];
 
-// ── MENÚ BASE (opciones del plan · v1) ──
+// ── MENÚ BASE (opciones del plan · v2) ──
 const MENU = {
-  intro: 'Plan de nutrición de Mayela — elige una opción en cada comida. Postre en cada comida principal: una manzana o una pera 🍎🍐',
+  intro: 'Plan de nutrición de Mayela — elige una opción en cada comida. La comida se monta con el método del plato: ½ verduras, ¼ proteína, ¼ hidrato 🍽️',
   blocks: [
     { key:'desayuno', icon:'☀️', title:'Desayuno', cls:'desayuno', options: [
-      { tag:'Salado', kind:'salado', text:'Tortitas de maíz o pan de centeno, pechuga de pavo y ½ aguacate <b>+ café</b>' },
-      { tag:'Salado', kind:'salado', text:'Tostada de pan de centeno con queso Philadelphia light y pepino <b>+ café</b>' },
-      { tag:'Dulce', kind:'dulce', text:'Yogur batido con frutos rojos congelados (arándanos, fresas, frambuesas) <b>+ café</b>' },
-      { tag:'Dulce', kind:'dulce', text:'Tostada de centeno con mermelada de tomate o frambuesa <b>+ café</b>' }
+      { tag:'Op. 1', text:'<b>2 huevos</b> + 1 tostada integral + tomate' },
+      { tag:'Op. 2', text:'<b>Yogur natural</b> + 30-40 g de avena + fruta + 10-15 g de nueces' },
+      { tag:'Op. 3', text:'<b>Tostada integral</b> con aguacate y pavo + una pieza de fruta' }
     ]},
-    { key:'mmañana', icon:'🍃', title:'Media mañana', cls:'mmañana', single:'Un plátano 🍌 + infusión de cola de caballo' },
-    { key:'comida', icon:'🥗', title:'Comida', cls:'comida', options: [
-      { tag:'Op. 1', text:'<b>Pescado</b> (3 rodajas de merluza · 1 lenguado · 1 emperador o mero · 2 bacalaos) con acompañamiento: patatas de bote, boniato, guisantes y zanahoria, col blanca, espinacas, pimientos o cebolla' },
-      { tag:'Op. 2', text:'<b>Ensalada de lentejas</b> con pimientos, tomate, cebolla, tomate cherry, queso feta y atún o sardinas' },
-      { tag:'Op. 3', text:'<b>Ensalada de brotes</b> (canónigos, espinacas frescas, lechuga morada) con manzana, tomate cherry, queso fresco light, 8 nueces y 2 hamburguesas de pollo. Sazona con especias o mostaza y ½ cucharada de miel' },
-      { tag:'Op. 4', text:'<b>Ensalada de brotes</b> con tomate, pepino, queso feta, anchoas o atún y cebolla' }
+    { key:'mmañana', icon:'🍃', title:'Media mañana', cls:'mmañana', options: [
+      { tag:'Op. 1', text:'Fruta + 10-15 almendras' },
+      { tag:'Op. 2', text:'Yogur natural' },
+      { tag:'Op. 3', text:'1 pieza de fruta' }
+    ]},
+    { key:'comida', icon:'🥗', title:'Comida · método del plato', cls:'comida', options: [
+      { tag:'½', text:'<b>Medio plato de verduras</b> — crudas o cocinadas, al gusto' },
+      { tag:'¼', text:'<b>Un cuarto de proteína</b> — pescado, pollo, huevo, atún, carne magra o legumbre' },
+      { tag:'¼', text:'<b>Un cuarto de hidrato</b> — patata, arroz, pasta o legumbre' },
+      { tag:'+', text:'<b>1 cucharada de aceite de oliva</b>' }
     ]},
     { key:'merienda', icon:'🌤', title:'Media tarde (merienda)', cls:'merienda', options: [
-      { tag:'Dulce', kind:'dulce', text:'Yogur griego con arándanos y ½ cucharada de miel <b>+ infusión de té verde</b>' },
-      { tag:'Salado', kind:'salado', text:'Tortitas de maíz y pechuga de pavo <b>+ infusión de té verde</b>' }
+      { tag:'Op. 1', text:'Yogur + fruta' },
+      { tag:'Op. 2', text:'Fruta + frutos secos' },
+      { tag:'Op. 3', text:'Tostada pequeña con queso fresco o pavo' }
     ]},
     { key:'cena', icon:'🌙', title:'Cena', cls:'cena', options: [
-      { tag:'Op. 1', text:'Tortilla de 3 huevos con atún, acompañada de un tomate entero' },
-      { tag:'Op. 2', text:'Ternera a la plancha con verdura, la cantidad que quieras' },
-      { tag:'Op. 3', text:'2 muslos de pollo deshuesados con patata o boniato' },
-      { tag:'Op. 4', text:'Chuletas de pavo con patatas o boniato' },
-      { tag:'Op. 5', text:'Crema de verduras y, de segundo, solomillo a la plancha' }
+      { tag:'Op. 1', text:'Merluza al horno o airfryer + ensalada + patata' },
+      { tag:'Op. 2', text:'Tortilla de 2 huevos con espinacas + tomate + pan integral' },
+      { tag:'Op. 3', text:'Salmón + verduras al microondas' },
+      { tag:'Op. 4', text:'Ensalada completa con huevo, atún, maíz y tomate' },
+      { tag:'Op. 5', text:'Crema de verduras + tortilla francesa + tostada' },
+      { tag:'Op. 6', text:'Poke rápido: arroz + salmón o atún + aguacate + verduras' },
+      { tag:'Op. 7', text:'Cena ligera: verduras + huevos o pescado' }
     ]}
   ],
   notes: [
-    { icon:'🍝', text:'<b>1 o 2 días por semana</b>, para la comida: pasta sin gluten o de lentejas con carne picada de pollo y tomate natural.' },
-    { icon:'🍎', text:'<b>Postre en cada comida:</b> una manzana o una pera.' },
-    { icon:'🐚', text:'<b>Si te notas floja o débil:</b> añade a la comida una lata de mejillones.' },
-    { icon:'🍫', text:'<b>Antojo de dulce:</b> tostada de pan de centeno con mantequilla de cacahuete o mermelada al gusto.' }
+    { icon:'🍽️', text:'<b>Método del plato en la comida:</b> ½ verduras, ¼ proteína, ¼ patata/arroz/pasta/legumbre y 1 cucharada de aceite de oliva.' },
+    { icon:'🥫', text:'<b>Sin complicarte:</b> legumbre de bote, arroz integral de vasito y verduras congeladas valen perfectamente.' },
+    { icon:'👨‍👩‍👧', text:'<b>Domingo:</b> comida familiar normal (legumbre, arroz, paella, carne o pescado) controlando cantidades.' },
+    { icon:'🌙', text:'<b>Cenas ligeras:</b> siempre verdura + una proteína, y pan o patata en poca cantidad.' }
   ]
 };
 
-// July 2026: July 1 = Wednesday. Weeks aligned Monday→Sunday.
+// September 2026: September 1 = Tuesday. Weeks aligned Monday→Sunday.
 const WEEKS = [
-  { label: 'Semana 1', dates: [1,2,3,4,5] },
-  { label: 'Semana 2', dates: [6,7,8,9,10,11,12] },
-  { label: 'Semana 3', dates: [13,14,15,16,17,18,19] },
-  { label: 'Semana 4', dates: [20,21,22,23,24,25,26] },
-  { label: 'Semana 5', dates: [27,28,29,30,31] }
+  { label: 'Semana 1', dates: [1,2,3,4,5,6] },
+  { label: 'Semana 2', dates: [7,8,9,10,11,12,13] },
+  { label: 'Semana 3', dates: [14,15,16,17,18,19,20] },
+  { label: 'Semana 4', dates: [21,22,23,24,25,26,27] },
+  { label: 'Semana 5', dates: [28,29,30] }
 ];
 
 const SHOPPING = {
   note: 'El plan se repite cada semana: esta es tu lista base. Marca lo que ya tengas — el progreso se guarda por separado en cada semana.',
   categories: [
     { icon: '🥦', name: 'Verduras y hortalizas', color: '#3a6b45', items: [
-      {qty:'4', name:'Zanahorias'},{qty:'¼', name:'Col blanca'},
-      {qty:'1 bolsa', name:'Espinacas frescas'},{qty:'1 bolsa', name:'Canónigos'},
-      {qty:'1', name:'Lechuga morada'},{qty:'1 bolsa', name:'Brotes variados'},
-      {qty:'2', name:'Pimiento rojo'},{qty:'1', name:'Pimiento verde'},
-      {qty:'2', name:'Cebolla'},{qty:'1 kg', name:'Tomates maduros'},
-      {qty:'250 g', name:'Tomate cherry'},{qty:'2', name:'Pepino'},
-      {qty:'2', name:'Boniato'},{qty:'4', name:'Patatas'}
+      {qty:'2 bolsas', name:'Verduras congeladas (menestra, salteado)'},
+      {qty:'1 bolsa', name:'Espinacas'},{qty:'1', name:'Lechuga o bolsa de ensalada'},
+      {qty:'1 kg', name:'Tomates'},{qty:'2', name:'Pimiento (rojo y verde)'},
+      {qty:'2', name:'Cebolla'},{qty:'2', name:'Calabacín (crema de verduras)'},
+      {qty:'4', name:'Zanahorias'},{qty:'1 kg', name:'Patatas'},
+      {qty:'1', name:'Puerro (crema de verduras)'}
     ]},
     { icon: '🍎', name: 'Frutas', color: '#7a3d22', items: [
-      {qty:'7', name:'Plátanos (media mañana diaria)'},{qty:'6', name:'Manzanas (postre + ensalada + antojo)'},
-      {qty:'4', name:'Peras (postre)'},{qty:'3', name:'Aguacates'},
-      {qty:'250 g', name:'Arándanos frescos (merienda)'},
-      {qty:'1 bolsa', name:'Frutos rojos congelados (arándanos, fresas, frambuesas)'}
+      {qty:'6', name:'Naranjas'},{qty:'6', name:'Plátanos'},
+      {qty:'6', name:'Manzanas'},{qty:'1 bandeja', name:'Fruta de temporada al gusto'},
+      {qty:'2', name:'Aguacates'}
     ]},
     { icon: '🐟', name: 'Pescado y carne', color: '#6b5020', items: [
-      {qty:'3 rodajas', name:'Merluza'},{qty:'1', name:'Lenguado'},
-      {qty:'1', name:'Emperador o mero'},{qty:'2', name:'Bacalao'},
-      {qty:'4 latas', name:'Atún al natural'},{qty:'1 lata', name:'Sardinas'},
-      {qty:'1 lata', name:'Anchoas'},{qty:'1 lata', name:'Mejillones (por si estás floja)'},
-      {qty:'½ docena', name:'Huevos'},{qty:'1 filete', name:'Ternera'},
-      {qty:'1', name:'Solomillo'},{qty:'2', name:'Muslos de pollo deshuesados'},
-      {qty:'2', name:'Chuletas de pavo'},{qty:'2', name:'Hamburguesas de pollo'},
-      {qty:'250 g', name:'Carne picada de pollo'},{qty:'1 paq.', name:'Pechuga de pavo (fiambre)'}
+      {qty:'2 lomos', name:'Merluza'},{qty:'2 lomos', name:'Salmón'},
+      {qty:'1', name:'Pescado blanco a elegir (sábado)'},
+      {qty:'5 latas', name:'Atún al natural'},
+      {qty:'1 docena', name:'Huevos'},
+      {qty:'2 filetes', name:'Pechuga de pollo'},
+      {qty:'250 g', name:'Carne picada magra'},
+      {qty:'1 paq.', name:'Pechuga de pavo (fiambre)'}
     ]},
     { icon: '🧀', name: 'Lácteos', color: '#2a3a6a', items: [
-      {qty:'4', name:'Yogur natural (para batir)'},{qty:'4', name:'Yogur griego'},
-      {qty:'1', name:'Queso Philadelphia light'},{qty:'100 g', name:'Queso feta'},
-      {qty:'1', name:'Queso fresco light'}
+      {qty:'12', name:'Yogur natural (desayuno + media mañana + merienda)'},
+      {qty:'1', name:'Queso fresco'}
     ]},
     { icon: '🌾', name: 'Despensa', color: '#4c3a7a', items: [
-      {qty:'1 paq.', name:'Tortitas de maíz'},{qty:'1 paq.', name:'Pan de centeno'},
-      {qty:'1 paq.', name:'Pasta sin gluten o de lentejas'},{qty:'2 botes', name:'Lentejas cocidas'},
-      {qty:'1 bote', name:'Patatas de bote'},{qty:'1 bote', name:'Guisantes y zanahoria'},
-      {qty:'100 g', name:'Nueces'},{qty:'1 tarro', name:'Mermelada (tomate o frambuesa)'},
-      {qty:'1', name:'Miel'},{qty:'1', name:'Mostaza'},
-      {qty:'1', name:'Mantequilla de cacahuete'},{qty:'1', name:'Tomate natural triturado'},
-      {qty:'–', name:'Café'},{qty:'–', name:'AOVE, sal y especias'}
-    ]},
-    { icon: '🍵', name: 'Infusiones', color: '#3a2a4a', items: [
-      {qty:'1 caja', name:'Cola de caballo'},{qty:'1 caja', name:'Té verde'}
+      {qty:'1 paq.', name:'Pan integral / tostadas integrales'},
+      {qty:'2 botes', name:'Lentejas cocidas'},{qty:'1 bote', name:'Garbanzos cocidos'},
+      {qty:'2 vasitos', name:'Arroz integral'},{qty:'1 paq.', name:'Arroz'},
+      {qty:'1 paq.', name:'Pasta integral'},{qty:'1 brik', name:'Tomate triturado'},
+      {qty:'1 lata', name:'Maíz dulce'},{qty:'250 g', name:'Avena en copos'},
+      {qty:'150 g', name:'Nueces'},{qty:'150 g', name:'Almendras'},
+      {qty:'1', name:'Aceite de oliva virgen extra'},
+      {qty:'–', name:'Café, sal y especias'}
     ]}
   ]
 };
@@ -482,7 +482,9 @@ const SHOPPING = {
 let currentView = 'menu';
 let currentWeek = 0;
 let currentDay = 0;
-let checkedItems = JSON.parse(localStorage.getItem('checkedItems') || '{}');
+let checkedItems = (() => {
+  try { return JSON.parse(localStorage.getItem('checkedItems_v2') || '{}'); } catch(e) { return {}; }
+})();
 let openCats = {};
 
 // ── HELPERS ──
@@ -492,7 +494,7 @@ function isLibre(dayIdx) {
 }
 
 function saveChecked() {
-  try { localStorage.setItem('checkedItems', JSON.stringify(checkedItems)); } catch(e) {}
+  try { localStorage.setItem('checkedItems_v2', JSON.stringify(checkedItems)); } catch(e) {}
 }
 
 // ── RENDER ──
@@ -519,7 +521,7 @@ function renderPlan() {
   // day strip
   html += '<div class="day-strip">';
   week.dates.forEach((d, di) => {
-    const dayOfWeek = (d + 1) % 7; // July 1 2026 = Wednesday
+    const dayOfWeek = d % 7; // September 1 2026 = Tuesday
     const libre = isLibre(dayOfWeek);
     html += `<div class="day-pill ${di===currentDay?'active':''} ${libre?'libre':''}" onclick="selectDay(${di})">
       <div class="day-dow">${DAYS[dayOfWeek]}</div>
@@ -530,13 +532,13 @@ function renderPlan() {
 
   // day detail
   const date = week.dates[currentDay];
-  const dayOfWeek = (date + 1) % 7;
+  const dayOfWeek = date % 7;
   const m = MEALS_TEMPLATE[dayOfWeek];
   const libre = isLibre(dayOfWeek);
 
   html += `<div class="day-detail">
     <div class="day-title-row">
-      <div class="day-title">${DAYS[dayOfWeek]}, ${date} de julio</div>
+      <div class="day-title">${DAYS[dayOfWeek]}, ${date} de septiembre</div>
       ${libre ? '<div class="libre-badge">✨ Día libre</div>' : ''}
     </div>`;
 
@@ -560,7 +562,7 @@ function renderPlan() {
     </div>`;
   });
 
-  html += `<div class="tip-bar">💧 Si te entra hambre entre horas → una infusión (cola de caballo o té verde). Postre en la comida: manzana o pera 🍎</div>`;
+  html += `<div class="tip-bar">🍽️ Comida con método del plato: ½ verduras, ¼ proteína, ¼ hidrato + 1 cucharada de aceite de oliva</div>`;
   html += '</div>';
 
   return html;
@@ -652,33 +654,30 @@ function renderMenu() {
 function renderTips() {
   return `<div class="tips-view">
     <div class="tip-section">
+      <h3>El método del plato</h3>
+      <div class="tip-card">🍽️ Para la comida, divide el plato: <strong>½ de verduras</strong>, <strong>¼ de proteína</strong> (pescado, pollo, huevo, atún, carne magra o legumbre) y <strong>¼ de patata, arroz, pasta o legumbre</strong>. Remata con <strong>1 cucharada de aceite de oliva</strong>.</div>
+    </div>
+    <div class="tip-section">
       <h3>Desayunos</h3>
-      <div class="tip-card"><strong>Salado:</strong> tortitas de maíz o pan de centeno con pechuga de pavo y ½ aguacate, o tostada de centeno con Philadelphia light y pepino. Siempre con tu café.</div>
-      <div class="tip-card"><strong>Dulce:</strong> yogur batido con frutos rojos congelados, o tostada de centeno con mermelada de tomate o frambuesa. Antioxidantes desde primera hora.</div>
+      <div class="tip-card">Tres opciones que puedes ir rotando: <strong>2 huevos</strong> con tostada integral y tomate; <strong>yogur natural</strong> con 30-40 g de avena, fruta y 10-15 g de nueces; o <strong>tostada integral</strong> con aguacate y pavo más una pieza de fruta.</div>
     </div>
     <div class="tip-section">
       <h3>Media mañana</h3>
-      <div class="tip-card">🍌 <strong>Un plátano</strong> + <strong>infusión de cola de caballo</strong>. Energía y un empujón depurativo entre el desayuno y la comida.</div>
-    </div>
-    <div class="tip-section">
-      <h3>Comidas</h3>
-      <div class="tip-card"><strong>🐟 Pescado:</strong> merluza, lenguado, emperador o mero, bacalao. Acompaña con boniato, patata, guisantes y zanahoria, col, espinacas, pimientos o cebolla.</div>
-      <div class="tip-card"><strong>🥗 Ensaladas:</strong> de lentejas (con feta y atún o sardinas) o de brotes (con pollo, o con atún/anchoas). Sazona con especias o mostaza y ½ cucharada de miel.</div>
-      <div class="tip-card"><strong>🍝 1-2 días por semana:</strong> pasta sin gluten o de lentejas con carne picada de pollo y tomate natural.</div>
+      <div class="tip-card">Algo sencillo: <strong>fruta con 10-15 almendras</strong>, un <strong>yogur natural</strong>, o simplemente <strong>una pieza de fruta</strong>.</div>
     </div>
     <div class="tip-section">
       <h3>Merienda</h3>
-      <div class="tip-card"><strong>Dulce:</strong> yogur griego con arándanos y ½ cucharada de miel. <strong>Salado:</strong> tortitas de maíz con pechuga de pavo. Siempre con <strong>infusión de té verde</strong>.</div>
+      <div class="tip-card"><strong>Yogur + fruta</strong>, <strong>fruta + frutos secos</strong>, o una <strong>tostada pequeña</strong> con queso fresco o pavo.</div>
     </div>
     <div class="tip-section">
       <h3>Cenas</h3>
-      <div class="tip-card">Ligeras y con proteína: tortilla de atún, ternera o solomillo a la plancha, muslos de pollo o chuletas de pavo con patata/boniato, o crema de verduras de primero.</div>
+      <div class="tip-card">Siempre verdura y una proteína: pescado al horno o airfryer, tortilla con espinacas, salmón con verduras al microondas, ensalada completa, crema de verduras con tortilla francesa o un poke rápido.</div>
     </div>
     <div class="tip-section">
-      <h3>Postre y extras</h3>
-      <div class="tip-card">🍎 <strong>Postre en cada comida:</strong> una manzana o una pera.</div>
-      <div class="tip-card">🐚 <strong>Si te notas floja o débil:</strong> añade a la comida una lata de mejillones. Hierro y minerales.</div>
-      <div class="tip-card">🍫 <strong>Antojo de dulce:</strong> tostada de pan de centeno con mantequilla de cacahuete o mermelada al gusto.</div>
+      <h3>Para no complicarte</h3>
+      <div class="tip-card">🥫 <strong>Los formatos rápidos valen:</strong> legumbre de bote, arroz integral de vasito y verduras congeladas. Salteas y listo.</div>
+      <div class="tip-card">👨‍👩‍👧 <strong>Domingo:</strong> comida familiar normal (legumbre, arroz, paella, carne o pescado) controlando las cantidades. Cena ligera de verduras con huevos o pescado.</div>
+      <div class="tip-card">💧 <strong>Entre horas:</strong> agua o infusión. Si de verdad tienes hambre, adelanta la fruta de la merienda.</div>
     </div>
   </div>`;
 }
@@ -728,10 +727,10 @@ function showView(view) {
 }
 
 // ── INIT ──
-// Set current day based on today's date if in June 2026
+// Set current day based on today's date if in September 2026
 (function initCurrentDay() {
   const today = new Date();
-  if (today.getFullYear() === 2026 && today.getMonth() === 6) {
+  if (today.getFullYear() === 2026 && today.getMonth() === 8) {
     const d = today.getDate();
     for (let wi = 0; wi < WEEKS.length; wi++) {
       const idx = WEEKS[wi].dates.indexOf(d);
